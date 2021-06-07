@@ -103,3 +103,5 @@ $$
 
 ### Plot 1 - Observations vs Predicitons
 ![Kalman Filter Predictions vs Observations](images/kalman_visualization.png)
+
+For more details please refer to the [Jupyter Notebook](KalmanFilter1d.ipynb)
