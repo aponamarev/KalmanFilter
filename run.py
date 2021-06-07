@@ -1,8 +1,14 @@
 import numpy as np
 from observations import Observations
 from covariance import CovarianceEstimator
+from visualization import plot_results
 
 
+results = dict(
+    predictions = list(),
+    pred_std = list(),
+    observations = list()
+)
 # Transformation matrix
 #   [x, velocity]
 #   [0, velocity]
@@ -48,12 +54,17 @@ def main():
         # P = P + Q
         Q = covar.eval(y)
         P = H*P*H.T + Q
-        print(
-            f"Observation (z) - {z[0,0]:.2f}, "\
-            f"prediction (x) - {x_t0[0,0]:.2f}, "\
-            f"P[x] - {P[0,0]:.2f}, P[v] - {P[1,1]:.2f}, "\
-            f"K[x] - {K[0,0]:.2f}, K[v] - {K[1,1]:.2f}"
-        )
+        # print(
+        #     f"Observation (z) - {z[0,0]:.2f}, "\
+        #     f"prediction (x) - {x_t0[0,0]:.2f}, "\
+        #     f"P[x] - {P[0,0]:.2f}, P[v] - {P[1,1]:.2f}, "\
+        #     f"K[x] - {K[0,0]:.2f}, K[v] - {K[1,1]:.2f}"
+        # )
+        results['predictions'].append(float(x_t0[0,0]))
+        results['pred_std'].append(float(np.sqrt(P[0,0])))
+        results['observations'].append(float(z[0,0]))
+    
+    plot_results(**results, file_name="kalman_visualization.png")
 
 if __name__ == "__main__":
     main()
