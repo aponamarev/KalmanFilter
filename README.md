@@ -103,5 +103,69 @@ $$
 
 ### Plot 1 - Observations vs Predicitons
 ![Kalman Filter Predictions vs Observations](images/kalman_visualization.png)
-
 For more details please refer to the [Jupyter Notebook](KalmanFilter1d.ipynb)
+
+
+### Plot 2 - Observations vs Predicitons - 2D Case
+
+An example of a Kalman filter for a 2d case requires small number of adjustments:
+
+State $x$ redefined:
+$$
+x = \left(\begin{array}{cc}x \\ \Delta x \end{array}\right) -> \left(\begin{array}{cc}x \\ \Delta x \\ y \\ \Delta y\end{array}\right)
+$$
+
+Transition matrix $F$ redefined:
+$$
+F = \left(\begin{array}{cc}
+x & \Delta x \\ . & \Delta x
+\end{array}\right)
+-> 
+\left(\begin{array}{cc}
+1.0 & 1.0 \\ . & 1.0
+\end{array}\right)
+-> 
+\left(\begin{array}{cc}
+x & \Delta x & . & . \\ 
+. & \Delta x & . & . \\
+. & . & y & \Delta y \\
+. & . & . & \Delta y \\
+\end{array}\right)
+-> 
+\left(\begin{array}{cc}
+1.0 & 1.0 & . & . \\ 
+. & 1.0 & . & . \\
+. & . & 1.0 & 1.0 \\
+. & . & . & 1.0 \\
+\end{array}\right)
+$$
+
+Observation matrix $H$ redefined:
+$$
+H = 
+\left(\begin{array}{cc}
+x & . \\ . & \Delta x
+\end{array}\right)
+->
+\left(\begin{array}{cc}
+1.0 & . \\ . & 1.0
+\end{array}\right)
+->
+\left(\begin{array}{cc}
+x & . & . & . \\
+. & \Delta x & . & . \\
+. & . & y & . \\
+. & . & . & \Delta y \\
+\end{array}\right)
+->
+\left(\begin{array}{cc}
+1.0 & . & . & . \\
+. & 1.0 & . & . \\
+. & . & 1.0 & . \\
+. & . & . & 1.0 \\
+\end{array}\right)
+$$ 
+
+![Kalman Filter Predictions vs Observations](images/kalman_visualization2d.png)
+
+For more details please refer to the [Jupyter Notebook](KalmanFilter2d.ipynb)
