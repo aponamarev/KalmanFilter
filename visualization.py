@@ -14,8 +14,8 @@ def plot_results(predictions: list, pred_std: list, observations: list=None, fil
     if observations is not None:
         ax.plot(x,observations, color='r', label='observations')
         
-    ax.plot(x,predictions, color='b', label='predictions')
-    ax.fill_between(x, l_bound, u_bound, color='b', alpha=.1)
+    ax.plot(x,predictions, color='b', label='predictions', linewidth=2)
+    ax.fill_between(x, l_bound, u_bound, color='b', alpha=.1, label='conf')
 
     plt.legend(loc='lower right')
 
