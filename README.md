@@ -13,7 +13,7 @@ $x_{t}$ = F * $x_{t-1}$
 Here F is the transition matrix that captures the dynamics of the prediction:
 $$
 F = \left(\begin{array}{cc} 
-x & \Delta t\\ 
+x & \Delta t \\ 
 0 & v
 \end{array}\right)
 $$
@@ -50,7 +50,7 @@ $$
 H = \left(\begin{array}{cc} 
 1 & 0 \\ 0 & 1 
 \end{array}\right) \\
-\\
+ \\
 y = z - H*x_{t}
 $$
 
@@ -65,14 +65,14 @@ K = P / (P + R) = P * (P + R)^{-1}
 $$
 Where $(P + R)^{-1}$ part is usually given a term $S$. $S$ does not carry any special meaning:
 $$
-S = P + R\\
+S = P + R \\
 K = P * S^{-1}
 $$
 
 Similarly to the transformations we applied to align $z$ and $x$, we use transition matrix $F$ to align $P$ and $S$:
 
 $$
-S = H*P*H_{T} + R\\
+S = H*P*H_{T} + R \\
 K = F*P*F_{T} * S^{-1}
 $$
 
