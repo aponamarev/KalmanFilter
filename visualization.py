@@ -1,7 +1,7 @@
 from matplotlib import pyplot as plt
 
 
-def plot_results(predictions: list, pred_std: list, observations: list=None, file_name="kalman_visualization.png") -> None:
+def plot_results(predictions: list, pred_std: list, observations: list=None, file_name: str=None) -> None:
 
     assert len(predictions) == len(observations)
 
@@ -19,7 +19,10 @@ def plot_results(predictions: list, pred_std: list, observations: list=None, fil
 
     plt.legend(loc='lower right')
 
-    plt.savefig(file_name)
+    if file_name is not None:
+        plt.savefig(file_name)
+    else:
+        plt.show()
 
 
 

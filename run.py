@@ -48,18 +48,24 @@ def main():
         x_t1 = F * x_t0
 
         # update
+        # - error
         z = np.matrix(o.get()).T
+        y = z - H*x_t1
 
         results['predictions'].append(float(x_t1[0,0]))
         results['pred_std'].append(float(np.sqrt(P[0,0])))
         results['observations'].append(float(z[0,0]))
 
-        y = z - H*x_t1
+        # - Kalman gain
         # K = P / (P+R)
         S = H*P*H.T + R
         K = P*H.T * np.linalg.inv(S)
+
+        # - state update
         # x[t] = x[t|t-1] * K*y
         x_t0 = x_t1 + K*y
+
+        # - prediction error update
         # P = (1-K)*P
         P = (I - K*H)*P
         # P = P + Q
