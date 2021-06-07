@@ -13,7 +13,7 @@ $x_{t}$ = F * $x_{t-1}$
 Here F is the transition matrix that captures the dynamics of the prediction:
 $$
 F = \left(\begin{array}{cc} 
-x & ∂t\\ 
+x & \Delta t\\ 
 0 & v
 \end{array}\right)
 $$
