@@ -29,15 +29,15 @@ class Observations(object):
         """
         self.n += 1
         step = np.pi * self.n * self.step
-        cos = 1 + np.cos(step)
-        x = self.s * self.decay**self.n + cos
+        cos = 1 + 0.2*np.cos(step)
+        x = self.s * self.decay**self.n * cos
         x_t0 = self.x0
         v = x-x_t0
 
         self.x0 = x
 
-        x += self.noise_x * (np.random.random() - 0.5)
-        v += self.noise_v * (np.random.random() - 0.5)
+        x += self.noise_x * np.random.normal()
+        v += self.noise_v * np.random.normal()
 
         return x, v
 
@@ -83,9 +83,9 @@ class Observations2d(object):
         self.x0 = x
         self.y0 = y
 
-        x += self.noise_loc * (np.random.random() - 0.5)
-        dx += self.noise_vel * (np.random.random() - 0.5)
-        y += self.noise_loc * (np.random.random() - 0.5)
-        dy += self.noise_vel * (np.random.random() - 0.5)
+        x += self.noise_loc * np.random.normal()
+        dx += self.noise_vel * np.random.normal()
+        y += self.noise_loc * np.random.normal()
+        dy += self.noise_vel * np.random.normal()
 
         return (x,dx,y,dy)

@@ -17,7 +17,7 @@ F = np.matrix([
     [0., 1.]
 ])
 # Observation matrix
-H = np.identity(F.shape[0], dtype=F.dtype)
+H = np.matrix([1.0, 0.0], dtype=F.dtype)
 #   [x, 0],
 #   [., v]
 I = np.identity(F.shape[0], dtype=F.dtype)
@@ -33,13 +33,12 @@ def main():
     x_var0 = 100.0
     v_var0 = 100.0
     # Measurement noise
-    x_measErr = 1.5
-    v_measErr = 0.25
+    x_measErr = 2.5
     
-    o = Observations(decay=0.975, noise_x=x_measErr, noise_v=v_measErr)
-    covar = CovarianceEstimator(n_dim=F.shape[0], dtype=F.dtype)
+    o = Observations(decay=0.975, noise_x=x_measErr)
+    covar = CovarianceEstimator(n_dim=H.shape[0], dtype=F.dtype)
     x_t0 = np.matrix([x0, v0]).T
-    R = np.matrix(np.diag(np.array([x_measErr, v_measErr])))
+    R = np.matrix(np.diag(np.array([100*x_measErr**2, ])))
     P = np.matrix(np.diag(np.array([x_var0, v_var0])))
 
     for _ in range(100):
@@ -49,7 +48,7 @@ def main():
 
         # update
         # - error
-        z = np.matrix(o.get()).T
+        z = np.matrix([o.get()[0],])
         y = z - H*x_t1
 
         results['predictions'].append(float(x_t1[0,0]))
@@ -70,7 +69,7 @@ def main():
         P = (I - K*H)*P
         # P = P + Q
         Q = covar.eval(y)
-        P = F*P*F.T + Q
+        P = F*P*F.T + H.T*Q*H
     
     plot_results(**results, file_name="kalman_visualization.png")
 

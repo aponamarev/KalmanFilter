@@ -51,7 +51,9 @@ def main():
     )
     covar = CovarianceEstimator(n_dim=F.shape[0], dtype=F.dtype)
     x_t0 = np.matrix([x0, dx0, y0, dy0]).T
-    R = np.matrix(np.diag(np.array([loc_measErr, v_measErr, loc_measErr, v_measErr])))
+    R = np.matrix(np.diag(np.array(
+        [10*loc_measErr**2, 10*v_measErr**2, 10*loc_measErr**2, 10*v_measErr**2]
+    )))
     P = np.matrix(np.diag(np.array([x_var0, dx_var0, y_var0, dy_var0])))
 
     for _ in range(100):

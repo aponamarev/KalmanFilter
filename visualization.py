@@ -1,29 +1,57 @@
+from typing import Iterable
 from matplotlib import pyplot as plt
 from mpl_toolkits import mplot3d
 
 
-def plot_results(predictions: list, pred_std: list, observations: list=None, file_name: str=None) -> None:
+def plot_results(predictions: list, pred_std: list, observations: list=None, k_gain: list=None, file_name: str=None) -> None:
 
     assert len(predictions) == len(observations)
 
     x = list(range(len(predictions)))
+    p_n = 1 if not isinstance(predictions[0], Iterable) else len(predictions[0])
+    labels = ["x_pred","v_pred","a_pred"]
+    colors = ["blue", "green", "yellow"]
+    if p_n == 1:
+        predictions = [[p,] for p in predictions]
 
-    fig, ax = plt.subplots()
+    fig, axs = plt.subplots() if p_n == 1 else plt.subplots(1, 2 if k_gain is None else 3, figsize=(12,6))
 
-    l_bound, u_bound = list(zip(*[(p-c, p+c) for p, c in zip(predictions, pred_std)]))
+    l_bound, u_bound = list(zip(*[(p[0]-c, p[0]+c) for p, c in zip(predictions, pred_std)]))
+    ax = axs if p_n == 1 else axs[0]
+    ax.fill_between(x, l_bound, u_bound, color=colors[0], alpha=.1, label='+/- std')
 
     if observations is not None:
-        ax.plot(x,observations, color='r', label='observations')
-        
-    ax.plot(x,predictions, color='b', label='predictions', linewidth=2)
-    ax.fill_between(x, l_bound, u_bound, color='b', alpha=.1, label='conf')
+        o_n = 1 if not isinstance(observations[0], Iterable) else len(observations[0])
+        ax = axs if p_n == 1 else axs[0]
+        ax.plot(
+            x,
+            observations if o_n==1 else [o[0] for o in observations], 
+            color='r', label='observations'
+        )
+    
+    if k_gain is not None:
+        k_n = 1 if not isinstance(k_gain[0], Iterable) else len(k_gain[0])
+        ax = axs if p_n == 1 else axs[2]
+        for i in range(k_n):
+            g = [g[i] for g in k_gain]
+            label = labels[i]
+            color = colors[i]
+            ax.plot(x, g, color=color, label=label, linewidth=2)
 
-    plt.legend(loc='lower right')
+        
+    for i in range(p_n):
+        ax = axs if p_n == 1 else axs[min(i,1)]
+        p = [p[i] for p in predictions]
+        label = labels[i]
+        color = colors[i]
+        ax.plot(x, p, color=color, label=label, linewidth=2)
+
+    fig.legend(loc='lower right')
 
     if file_name is not None:
-        plt.savefig(file_name)
+        fig.savefig(file_name)
     else:
-        plt.show()
+        fig.show()
 
 
 def plot_2d_results(predictions: list, pred_std: list, observations: list=None, file_name: str=None) -> None:
