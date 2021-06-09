@@ -23,7 +23,7 @@ def plot_results(predictions: list, pred_std: list, observations: list=None, k_g
     if observations is not None:
         o_n = 1 if not isinstance(observations[0], Iterable) else len(observations[0])
         ax = axs if p_n == 1 else axs[0]
-        ax.plot(
+        ax.scatter(
             x,
             observations if o_n==1 else [o[0] for o in observations], 
             color='r', label='observations'
