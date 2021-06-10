@@ -52,7 +52,7 @@ def main():
     covar = CovarianceEstimator(n_dim=F.shape[0], dtype=F.dtype)
     x_t0 = np.matrix([x0, dx0, y0, dy0]).T
     R = np.matrix(np.diag(np.array(
-        [10*loc_measErr**2, 10*v_measErr**2, 10*loc_measErr**2, 10*v_measErr**2]
+        [50*loc_measErr**2, 50*v_measErr**2, 50*loc_measErr**2, 50*v_measErr**2]
     )))
     P = np.matrix(np.diag(np.array([x_var0, dx_var0, y_var0, dy_var0])))
 
@@ -65,16 +65,6 @@ def main():
         # - error
         z = np.matrix(o.get()).T
         y = z - H*x_t1
-
-        results['predictions'].append([
-            float(x_t1[0,0]), float(x_t1[1,0]), float(x_t1[2,0]), float(x_t1[3,0])
-        ])
-        results['pred_std'].append([
-            float(np.sqrt(P[0,0])), float(np.sqrt(P[1,1])), float(np.sqrt(P[2,2])), float(np.sqrt(P[3,3]))
-        ])
-        results['observations'].append([
-            float(z[0,0]), float(z[1,0]), float(z[2,0]), float(z[3,0])
-        ])
 
         # - Kalman gain
         # K = P / (P+R)
@@ -91,6 +81,16 @@ def main():
         # P = P + Q
         Q = covar.eval(y)
         P = F*P*F.T + Q
+
+        results['predictions'].append([
+            float(x_t0[0,0]), float(x_t0[1,0]), float(x_t0[2,0]), float(x_t0[3,0])
+        ])
+        results['pred_std'].append([
+            float(np.sqrt(Q[0,0])), float(np.sqrt(Q[1,1])), float(np.sqrt(Q[2,2])), float(np.sqrt(Q[3,3]))
+        ])
+        results['observations'].append([
+            float(z[0,0]), float(z[1,0]), float(z[2,0]), float(z[3,0])
+        ])
     
     viz.plot_2d_results(**results, file_name="kalman_visualization2d.png")
 

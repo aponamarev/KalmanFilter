@@ -33,12 +33,12 @@ def main():
     x_var0 = 100.0
     v_var0 = 100.0
     # Measurement noise
-    x_measErr = 2.5
+    x_measErr = 5.0
     
-    o = Observations(decay=0.975, noise_x=x_measErr)
+    o = Observations(start=100.0, decay=0.99, noise_x=x_measErr)
     covar = CovarianceEstimator(n_dim=H.shape[0], dtype=F.dtype)
     x_t0 = np.matrix([x0, v0]).T
-    R = np.matrix(np.diag(np.array([100*x_measErr**2, ])))
+    R = np.matrix(np.diag(np.array([50*x_measErr**2, ])))
     P = np.matrix(np.diag(np.array([x_var0, v_var0])))
 
     for _ in range(100):
@@ -50,10 +50,6 @@ def main():
         # - error
         z = np.matrix([o.get()[0],])
         y = z - H*x_t1
-
-        results['predictions'].append(float(x_t1[0,0]))
-        results['pred_std'].append(float(np.sqrt(P[0,0])))
-        results['observations'].append(float(z[0,0]))
 
         # - Kalman gain
         # K = P / (P+R)
@@ -70,6 +66,10 @@ def main():
         # P = P + Q
         Q = covar.eval(y)
         P = F*P*F.T + H.T*Q*H
+
+        results['predictions'].append(float(x_t0[0,0]))
+        results['pred_std'].append(float(np.sqrt(Q[0,0])))
+        results['observations'].append(float(z[0,0]))
     
     plot_results(**results, file_name="kalman_visualization.png")
 
